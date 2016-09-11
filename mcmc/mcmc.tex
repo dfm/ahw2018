@@ -212,24 +212,62 @@ And a scatterplot matrix.
 The autocorrelation function.
 \label{fig:autocorr}}
 
-\ssfigure{figures/ensemble.pdf}{0.5}{%
-The autocorrelation function.
-\label{fig:ensemble}}
+% \ssfigure{figures/ensemble.pdf}{0.5}{%
+% The autocorrelation function.
+% \label{fig:ensemble}}
 
+\clearpage
 \paragraph{A more realistic problem: fitting a line to data}
 
 In this section, you will fit a line to the small data set plotted in
-Figure~\ref{fig:data} and available online at.
+Figure~\ref{fig:data} and available online at
+\url{https://github.com/dfm/imprs/blob/master/mcmc/data.txt}.
 If you just have data points with Gaussian uncertainties and Gaussian or broad
 priors, you probably shouldn't use MCMC (because the posterior can be sampled
 analytically) so let's make it a little more interesting: there is an
 intrinsic scatter in the relationship and there are uncertainties on the $x$
 values.
-We'll start by ignoring the $x$ uncertantites.
+
+We'll start by ignoring the $x$ uncertainties but including the intrinsic
+scatter parameterized by the logarithm of the scatter $\ln s$.
+In this case, the likelihood is:
+\begin{eqnarray}
+\ln p (y\,|\,m,\,b,\,\ln s) &=& -\frac{1}{2} \sum_{n=1}^N\left[
+\left(\frac{y_n-m\,x_n-b}{\sigma^2 + s^2}\right)^2 + \ln(2\,\pi\,(\sigma^2 +
+s^2))\right]
+\end{eqnarray}
+(this derivation is left as an exercise)
+and a reasonable choice of ``uninformative'' prior is\footnote{See
+J.~VanderPlas's blog for a discussion of this choice:
+\url{http://jakevdp.github.io/blog/2014/06/14/frequentism-and-bayesianism-4-bayesian-in-python/}.}:
+\begin{eqnarray}
+\ln p(m,\,b,\,\ln s) &\propto& -\frac{3}{2}\ln(1+b^2) \quad.
+\end{eqnarray}
+
+Implement this model in code and try sampling from it using the sampler that
+you implemented previously or another package.
+Make all the diagnostic plots from above but include one other plot: the
+posterior predictive distribution (see Figure~\ref{fig:line1}).
+To achieve this, plot the line predicted for a few samples randomly selected
+from the chain on top of the observed data.
+
+Finally, implement the full model where uncertainties in $x$ are also
+included.
+To do this, you will need to choose a prior on $x_\mathrm{true}$~--~maybe
+something like $\mathcal{U}(0,\,10)$~--~and sample the 13-dimensional problem
+instead of the 3-dimensional case from before.
+Before starting on this, you should draw the graphical model and consult with
+any other students who are working on this part.
+
+\newpage
 
 \ssfigure{figures/data.pdf}{0.5}{%
 The data.
-\label{fig:ensemble}}
+\label{fig:data}}
+
+\ssfigure{figures/line1.pdf}{0.5}{%
+The data.
+\label{fig:line1}}
 
 % \begin{multicols}{2}
 % {\centering\bf REFERENCES\par}
