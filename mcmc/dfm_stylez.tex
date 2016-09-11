@@ -1,0 +1,241 @@
+% Based on the `hogg_nasa` stylesheet by David W. Hogg (NYU)
+
+% Colors.
+\usepackage{amsmath}
+\usepackage{color}
+\usepackage[pagebackref=false]{hyperref}
+\definecolor{linkcolor}{rgb}{0,0,0.25}
+\hypersetup{colorlinks=true,linkcolor=linkcolor,citecolor=linkcolor,
+            filecolor=linkcolor,urlcolor=linkcolor}
+
+\usepackage[para]{footmisc}
+\urlstyle{sm}
+
+\usepackage{epsfig}
+\usepackage{graphicx}
+\setlength{\headheight}{2ex}
+\setlength{\headsep}{2ex}
+
+\usepackage{multicol}
+
+\newcommand{\dd}{\,\mathrm{d}}
+\newcommand{\bvec}[1]{{\ensuremath{{\boldsymbol{#1}}}}}
+\newcommand{\transpose}[1]{{#1}^{\!\mathsf{T}}}
+\newcommand{\inverse}[1]{{#1}^{-1}}
+
+
+%----- exact 1-in margins
+% NB: headheight and headsep MUST exist and be set
+\setlength{\textwidth}{6.5in}
+\setlength{\textheight}{9in}
+\addtolength{\textheight}{-1.0\headheight}
+\addtolength{\textheight}{-1.0\headsep}
+\setlength{\topmargin}{-2em}
+\addtolength{\textheight}{-1.0\topmargin}
+\setlength{\oddsidemargin}{0.0in}
+\setlength{\evensidemargin}{0.0in}
+
+%----- typeset certain kinds of words
+\newcommand{\observatory}[1]{\textsl{#1}}
+\newcommand{\package}[1]{\textsf{#1}}
+\newcommand{\project}[1]{\package{#1}}
+\newcommand{\an}{\package{Astrometry.net}}
+\newcommand{\NASA}{\observatory{NASA}}
+\newcommand{\JWST}{\observatory{JWST}}
+\newcommand{\Kepler}{\observatory{Kepler}}
+\newcommand{\kepler}{\Kepler}
+\newcommand{\Ktwo}{\observatory{K2}}
+\newcommand{\ktwo}{\Ktwo}
+\newcommand{\PLATO}{\observatory{PLATO}}
+\newcommand{\MAST}{\observatory{MAST}}
+\newcommand{\EA}{\observatory{Exoplanet Archive}}
+\newcommand{\TESS}{\observatory{TESS}}
+\newcommand{\galex}{\observatory{GALEX}}
+\newcommand{\Spitzer}{\observatory{Spitzer}}
+\newcommand{\gaia}{\observatory{Gaia}}
+\newcommand{\Gaia}{\gaia}
+\newcommand{\lsst}{\observatory{LSST}}
+\newcommand{\sdss}{\observatory{SDSS}}
+\newcommand{\latin}[1]{\textit{#1}}
+\newcommand{\eg}{\latin{e.g.}}
+\newcommand{\etal}{\latin{et~al.}}
+\newcommand{\etc}{\latin{etc.}}
+\newcommand{\ie}{\latin{i.e.}}
+\newcommand{\vs}{\latin{vs.}}
+
+\newcommand{\doi}[2]{\href{http://dx.doi.org/#1}{\emph{#2}}}
+\newcommand{\ads}[2]{\href{http://adsabs.harvard.edu/abs/#1}{\emph{#2}}}
+\newcommand{\arxiv}[1]{\href{http://arxiv.org/abs/#1}{arXiv:#1}}
+
+%----- stuff for this proposal in particular.
+\newcommand{\kplr}{\package{kplr}}
+\newcommand{\PLM}{\package{PLM}}
+\newcommand{\OWL}{\package{OWL}}
+\newcommand{\George}{\package{George}}
+\newcommand{\kpsf}{\package{kpsf}}
+\newcommand{\emcee}{\package{emcee}}
+\newcommand{\GitHub}{\package{GitHub}}
+\newcommand{\KIC}{\textsl{KIC}}
+\newcommand{\KOI}{\textsl{KOI}}
+
+%----- typeset journals
+% \newcommand{\aj}{Astron.\,J.}
+% \newcommand{\apj}{Astrophys.\,J.}
+% \newcommand{\apjl}{Astrophys.\,J.\,Lett.}
+% \newcommand{\apjs}{Astrophys.\,J.\,Supp.\,Ser.}
+% \newcommand{\mnras}{Mon.\,Not.\,Roy.\,Ast.\,Soc.}
+% \newcommand{\aap}{Astron.\,\&~Astrophys.}
+
+%----- Tighten up paragraphs and lists
+\setlength{\parskip}{0.0ex}
+\setlength{\parindent}{0.2in}
+\renewenvironment{itemize}{\begin{list}{$\bullet$}{%
+  \setlength{\topsep}{0.0ex}%
+  \setlength{\parsep}{0.0ex}%
+  \setlength{\partopsep}{0.0ex}%
+  \setlength{\itemsep}{0.0ex}%
+  \setlength{\leftmargin}{1.5\parindent}}}{\end{list}}
+\newcounter{actr}
+\renewenvironment{enumerate}{\begin{list}{\arabic{actr}.}{%
+  \usecounter{actr}%
+  \setlength{\topsep}{0.0ex}%
+  \setlength{\parsep}{0.0ex}%
+  \setlength{\partopsep}{0.0ex}%
+  \setlength{\itemsep}{0.0ex}%
+  \setlength{\leftmargin}{1.5\parindent}}}{\end{list}}
+
+%----- mess with paragraph spacing!
+\makeatletter
+\renewcommand\paragraph{\@startsection{paragraph}{4}{\z@}%
+                                    {1ex}%
+                                    {-1em}%
+                                    {\normalfont\normalsize\bfseries}}
+\makeatother
+
+%----- Special Hogg list for references
+  \newcommand{\hogglist}{%
+    \rightmargin=0in
+    \leftmargin=0.25in
+    \topsep=0ex
+    \partopsep=0pt
+    \itemsep=0ex
+    \parsep=0pt
+    \itemindent=-1.0\leftmargin
+    \listparindent=\leftmargin
+    \settowidth{\labelsep}{~}
+    \usecounter{enumi}
+  }
+
+%----- side-to-side figure macro
+%------- make numbers add up to 94%
+ \newlength{\figurewidth}
+ \newlength{\captionwidth}
+ \newcommand{\ssfigure}[3]{%
+   \setlength{\figurewidth}{#2\textwidth}
+   \setlength{\captionwidth}{\textwidth}
+   \addtolength{\captionwidth}{-\figurewidth}
+   \addtolength{\captionwidth}{-0.02\figurewidth}
+   \begin{figure}[htb]%
+   \begin{tabular}{cc}%
+     \begin{minipage}[c]{\figurewidth}%
+       \resizebox{\figurewidth}{!}{\includegraphics{#1}}%
+     \end{minipage} &%
+     \begin{minipage}[c]{\captionwidth}%
+       \textsf{\caption[]{\footnotesize {#3}}}%
+     \end{minipage}%
+   \end{tabular}%
+   \end{figure}}
+
+ \newcommand{\ssfiguretwo}[4]{%
+   \setlength{\figurewidth}{#3\textwidth}
+   \setlength{\captionwidth}{\textwidth}
+   \addtolength{\captionwidth}{-\figurewidth}
+   \addtolength{\captionwidth}{-0.02\figurewidth}
+   \begin{figure}[htb]%
+   \begin{tabular}{cc}%
+     \begin{minipage}[c]{\figurewidth}%
+       \resizebox{\figurewidth}{!}{\includegraphics{#1}}\\
+       \resizebox{\figurewidth}{!}{\includegraphics{#2}}%
+     \end{minipage} &%
+     \begin{minipage}[c]{\captionwidth}%
+       \textsf{\caption[]{\footnotesize {#4}}}%
+     \end{minipage}%
+   \end{tabular}%
+   \end{figure}}
+
+%----- top-bottom figure macro
+ \newlength{\figureheight}
+ \setlength{\figureheight}{0.75\textheight}
+ \newcommand{\tbfigure}[2]{%
+   \begin{figure}[htp]%
+   \resizebox{\textwidth}{!}{\includegraphics{#1}}%
+   \textsf{\caption[]{\footnotesize {#2}}}%
+   \end{figure}}
+
+%----- deal with pdf page-size stupidity
+\special{papersize=8.5in,11in}
+\setlength{\pdfpageheight}{\paperheight}
+\setlength{\pdfpagewidth}{\paperwidth}
+
+% no more bad lines!
+\sloppy\sloppypar
+
+% A better underline!
+% tex.stackexchange.com/questions/36894/underline-omitting-the-descenders
+\usepackage[T1]{fontenc}
+\usepackage[latin1]{inputenc}
+\usepackage{soul}
+% \usepackage{xcolor}
+\usepackage{xparse}
+\makeatletter
+
+% http://www.guitex.org/home/it/forum/5-tex-e-latex/83195-la-libreria-hobby-tikz-non-funziona-piu#83203
+\ExplSyntaxOn
+\cs_if_exist:NF \prg_stepwise_function:nnnN { \cs_gset_eq:NN \prg_stepwise_function:nnnN \int_step_function:nnnN }
+\cs_if_exist:NF \prg_stepwise_inline:nnnn { \cs_gset_eq:NN \prg_stepwise_inline:nnnn \int_step_inline:nnnn }
+\ExplSyntaxOff
+
+\ExplSyntaxOn
+\cs_new:Npn \white_text:n #1
+  {
+    \fp_set:Nn \l_tmpa_fp {.01}
+    \fp_mul:Nn \l_tmpa_fp {#1}
+    \llap{\textcolor{white}{\the\SOUL@syllable}\hspace{\fp_to_decimal:N \l_tmpa_fp em}}
+    \llap{\textcolor{white}{\the\SOUL@syllable}\hspace{-\fp_to_decimal:N \l_tmpa_fp em}}
+  }
+\NewDocumentCommand{\whiten}{ m }
+    {
+      \prg_stepwise_function:nnnN {1}{1}{#1} \white_text:n
+      % \int_step_function:nnnN {1}{1}{#1} \white_text:n
+    }
+\ExplSyntaxOff
+
+\NewDocumentCommand{ \varul }{ D<>{5} O{0.2ex} O{0.1ex} +m } {%
+\begingroup
+\setul{#2}{#3}%
+\def\SOUL@uleverysyllable{%
+   \setbox0=\hbox{\the\SOUL@syllable}%
+   \ifdim\dp0>\z@
+      \SOUL@ulunderline{\phantom{\the\SOUL@syllable}}%
+      \whiten{#1}%
+      \llap{%
+        \the\SOUL@syllable
+        \SOUL@setkern\SOUL@charkern
+      }%
+   \else
+       \SOUL@ulunderline{%
+         \the\SOUL@syllable
+         \SOUL@setkern\SOUL@charkern
+       }%
+   \fi}%
+    \ul{#4}%
+\endgroup
+}
+\makeatother
+
+
+% Underline paragraph titles
+\usepackage[explicit]{titlesec}
+\titleformat{\paragraph}[runin]
+    {\normalfont\normalsize\bfseries}{\theparagraph}{1em}
+    {\varul{#1}}

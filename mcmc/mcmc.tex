@@ -1,0 +1,44 @@
+\documentclass[letterpaper,12pt,preprint]{hack_aastex}
+
+\input{dfm_stylez}
+\pagestyle{myheadings}
+\markright{\textsf{\footnotesize %
+                   IMPRS summer school /
+                   2016 /
+                   MCMC exercises by Dan Foreman-Mackey}}
+
+% Single-spacing.
+\def\baselinestretch{1.1}
+
+\begin{document}
+
+In this exercise session.
+
+\paragraph{A homegrown Metropolis sampler}
+
+In this section.
+
+
+\ssfigure{figures/traces.pdf}{0.5}{%
+These are traces.
+\label{fig:traces}}
+
+\ssfigure{figures/corner.pdf}{0.5}{%
+And a scatterplot matrix.
+\label{fig:corner}}
+
+\ssfigure{figures/autocorr.pdf}{0.5}{%
+The autocorrelation function.
+\label{fig:autocorr}}
+
+% \begin{multicols}{2}
+% {\centering\bf REFERENCES\par}
+% \vspace{0.2em}
+% \begin{thebibliography}{}%
+% \raggedright\raggedbottom\scriptsize\setlength{\parskip}{-0.5em}%
+
+
+% \end{thebibliography}
+% \end{multicols}
+
+\end{document}
