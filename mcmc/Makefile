@@ -17,18 +17,15 @@ DIRS      = figures
 # You shouldn't need to edit below here.
 default: mcmc.pdf
 
-.PHONY: problems
+.PHONY: figures
 
-problems: force_look
+figures: force_look
 	$(foreach d, ${DIRS}, (echo "Looking into ${d}:"; cd ${d}; ${MAKE} ${MFLAGS}) )
 
-mcmc.pdf: mcmc.tex problems
+mcmc.pdf: mcmc.tex figures
 	${LATEX} mcmc.tex
 	( ${CHECK_RERUN} && ${LATEX} mcmc.tex ) || echo "Done."
 	( ${CHECK_RERUN} && ${LATEX} mcmc.tex ) || echo "Done."
-
-# subdirs: force_look
-# 	$(foreach d, ${DIRS}, (echo "Looking into ${d}:"; cd ${d}; ${MAKE} ${MFLAGS}) )
 
 force_look:
 	true
