@@ -23,7 +23,6 @@ addons:
             - texlive-latex-extra
             - texlive-fonts-recommended
             - texlive-fonts-extra
-            - texlive-latex3
             - dvipng
 
 install:
