@@ -10,14 +10,195 @@
 % Single-spacing.
 \def\baselinestretch{1.1}
 
+\include{figures/numbers-mh}
+\include{figures/numbers-emcee}
+
+\newcommand{\question}{\emph}
+
 \begin{document}
 
-In this exercise session.
+In this exercise session you will implement a simple Metropolis MCMC sampler
+in your programming language of choice.
+You will test this sampler on a simple toy problem~--~drawing samples from a
+two-dimensional Gaussian~--~and then on two more realistic problems.
+The exercises are designed to take longer than the allotted 45~minutes so
+don't worry if you don't finish.
+Hopefully people with all levels of experience will learn something!
+If you have previous experience with MCMC and if you have already implemented
+a Metropolis sampler, why don't you take this time to implement a more
+sophisticated method (ensemble, Hamiltonian, nested, or otherwise), try out a
+new programming language, or help out other students with less experience.
+
+\paragraph{Toy problem: a two-dimensional Gaussian}
+
+In the following section you will implement your own Metropolis MCMC sampler
+and test it by drawing samples from a two-dimensional Gaussian but the first
+step is to implement the probability distribution as a function that takes in
+a two-dimensional vector $\theta$ and returns:
+\begin{eqnarray}
+\ln p(\theta) &=& -\frac{1}{2}\,\theta^\mathrm{T}\,\Sigma^{-1}\,\theta
+    + \mathrm{constant}
+\end{eqnarray}
+where
+\begin{eqnarray}
+\Sigma &=& \left(\begin{array}{cc}
+1.0 & -0.08 \\
+-0.08 & 0.01 \\
+\end{array}\right)
+\end{eqnarray}
+Note: you definitely want to compute $\ln p$ (not just $p$).
+\question{Why?}
+
+\question{To test your probability function, ensure that the difference
+between the function evaluated at two (random) points in parameter space is
+the same as what I get.}
+For example, make sure that you find the following:
+\begin{eqnarray}
+\ln p([0.5, -0.1]^\mathrm{T}) - \ln p([-0.01, 0.3]^\mathrm{T}) &\equiv&
+    11.80847\ldots \quad.
+\end{eqnarray}
+If you don't get this result on the first try, debug your function until you
+do.
 
 \paragraph{A homegrown Metropolis sampler}
 
-In this section.
+In this section, you will implement a Metropolis MCMC sampler to draw samples
+from the distribution defined in the previous section.
+As a reminder, the steps in a Metropolis MCMC are described here in words:
+\begin{enumerate}
 
+\item Initialize the parameters as $\theta(t=0)$.
+
+\item Propose an update $q = \theta(t) + \sigma\,\delta$ where $\sigma$ is a
+tuning parameter and $\delta$ is drawn from a zero mean, unit variance
+Gaussian. Alternatively, you can try updating $\theta$ only one dimension.
+
+\item Compute the acceptance probability $r =
+\mathrm{min}\left(1,\,\frac{p(q)}{p(\theta(t))}\right)$.
+
+\item Draw $u$ from a uniform distribution between 0 and 1. If $u < r$, accept
+the proposal and set $\theta(t+1) = q$ to the chain. Otherwise, reject the
+proposal and set $\theta(t+1) = \theta(t)$. Append $\theta(t+1)$ to the chain.
+\emph{Note: in every iteration of this procedure a new entry is added to the
+chain~--~even if the sample isn't accepted!}
+
+\item Go to step 2 and repeat.
+
+\end{enumerate}
+Here are some suggestions to keep in mind for your implementation:
+\begin{itemize}
+
+\item In this function, you should track the acceptance fraction.
+Keep track of how many proposals you accept.
+
+\item As mentioned above, don't compute or use $p(\theta)$ directly~--~you
+should only ever use the logarithm of this function.
+
+\item Your implementation must support parameter \emph{vectors}.
+For this problem, we're working in 2-D but don't special case to that because
+it might be necessary to be able to sample more parameters later.
+
+\item Similarly, you should implement the sampler in such a way that it is
+easy to swap out a different probability function. Most programming languages
+allow you to pass function pointers so taking the log-probability function as
+an argument is probably the best interface.
+
+\item Finally, to start the sampler, you must choose an initial location in
+parameter space. Don't hard-code this location~--~take it as an
+argument~--~because we'll test different initialization methods later.
+
+\end{itemize}
+\question{Implement the Metropolis MCMC method as a function with a calling
+sequence something like}
+\begin{center}
+\texttt{samples, acc\_frac = metropolis(log\_prob\_func, sigma, inital\_theta,
+num\_steps)}
+\end{center}
+This function should return the chain of samples and the accumulated
+acceptance fraction.
+
+
+\paragraph{Testing, tuning, and convergence (aka time to break your sampler)}
+
+MCMC methods are notoriously hard to test rigorously so instead you can just
+test your implementation qualitatively for today.
+To start, initialize at a reasonable location (\question{What is a good way to
+choose this in general?}) and \question{run some chains and look at a few
+diagnostics}
+\begin{itemize}
+
+\item What is the acceptance fraction? Is this unreasonably high or low?
+Note: this is a very easy problem so the acceptance fraction will
+probably be higher than you would get in any problem in The Real
+World\textsuperscript{\textsf{TM}}.
+
+\item Compute the sample mean and covariance matrix of the chain. Is this
+close to what you would expect? What do you expect and why? What happens as
+you run the chain for longer?
+
+\item Plot the trace (value as a function of step number) for each parameter.
+See Figure~\ref{fig:traces} for an example of what to expect.
+
+\item Plot the scatterplot matrix or corner plot to visualize the covariances
+in the problem.
+In Python you can use
+\textsf{corner.py}\footnote{\url{http://corner.readthedocs.io}} and other
+plotting libraries probably have similar functionality but, otherwise, you can
+just make a scatterplot of the chain values.
+Figure~\ref{fig:corner} shows an example using \textsf{corner.py}.
+
+\item Try changing $\sigma$ and your initialization and remake these plots to
+see what happens.
+What happens as you make $\sigma$ extremely large $10^4$ or small $10^{-4}$?
+What happens if you move the initial guess far away from the peak of the
+distribution?
+
+\end{itemize}
+
+As discussed in lecture, the best quantification of sampler performance is the
+integrated autocorrelation time $\tau_\mathrm{int}$.\footnote{Note: there isn't
+just \emph{one} autocorrelation time.
+$\tau_\mathrm{int}$ will, in general, be different for every different
+$f(\theta)$ in Equation~\ref{eq:integral}.}
+This provides an estimate of the number of steps of MCMC required to obtain an
+independent sample.
+Since MCMC is used to compute integrals, an estimate of $\tau_\mathrm{int}$ is
+required to compute the sampling uncertainty on the approximation
+\begin{eqnarray}\label{eq:integral}
+\int f(\theta)\,p(\theta)\,\mathrm{d}\theta &\approx&
+    \frac{1}{N} \sum_{n=1}^N f(\theta^{(n)}) \quad
+    \mathrm{where}\,\theta^{(n)} \sim p(\theta)
+\end{eqnarray}
+and the sampler that produces a chain with a smallest value of
+$\tau_\mathrm{int}$ at fixed computational cost is the best.
+
+\question{Write or find a function that computes the autocorrelation function
+of a one-dimensional chain and compute this for a few choices of $f(\theta)$.}
+Figure~\ref{fig:autocorr} gives a few suggestions for functions to consider.
+\question{Then, find or implement a function that estimates the integrated
+autocorrelation time}:
+\begin{eqnarray}
+\tau_\mathrm{int,est} &\approx& C(0) + 2\,\sum_{\tau=1}^W C(\tau)
+\end{eqnarray}
+where $C(\tau)$ is the autocorrelation function and $W$ is a tuning parameter.
+Note: autocorrelation time estimates are always very noisy and you need to run
+a long chain to get a reliable estimate.
+Furthermore, the choice of $W$ can be subtle. Try several values of $W$ or
+read A.~Sokal's notes\footnote{See pages 15--16 of this note:
+\url{http://www.stat.unc.edu/faculty/cji/Sokal.pdf}} on how to choose $W$ more
+robustly.
+If you are working in Python, \textsf{emcee}\footnote{Versions 2.2.x and
+greater: \url{http://dan.iel.fm/emcee/current/api/\#autocorrelation-analysis}.}
+includes an implementation of this method.
+
+For $\sigma = 0.1$, I find integrated autocorrelation times of \taua~steps and
+\taub~steps for $f(\theta)=\theta_1$ and $f(\theta)=\theta_2$ respectively.
+\question{Do you find the same? If not, why not?
+Try changing $\sigma$ to see how the autocorrelation function and times
+change.
+Can you find a better choice of $\sigma$? What if you use different values of
+$\sigma$ for each parameter? How many tuning parameters are there in this
+method?}
 
 \ssfigure{figures/traces.pdf}{0.5}{%
 These are traces.
@@ -30,6 +211,10 @@ And a scatterplot matrix.
 \ssfigure{figures/autocorr.pdf}{0.5}{%
 The autocorrelation function.
 \label{fig:autocorr}}
+
+\ssfigure{figures/ensemble.pdf}{0.5}{%
+The autocorrelation function.
+\label{fig:ensemble}}
 
 % \begin{multicols}{2}
 % {\centering\bf REFERENCES\par}

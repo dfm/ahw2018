@@ -4,7 +4,6 @@
 from __future__ import division, print_function
 
 import numpy as np
-import matplotlib.pyplot as plt
 
 from plotting import setup, savefig, SQUARE_FIGSIZE
 
@@ -40,18 +39,22 @@ def mh(log_p_func, theta0, niter, sigma=0.1):
 if __name__ == "__main__":
     import corner
     from emcee import autocorr
+    import matplotlib.pyplot as plt
 
     # Run the sampler.
-    chain, acc_frac = mh(log_p_func, np.random.randn(2), 200000)
+    chain, acc_frac = mh(log_p_func, np.random.randn(2), 400000)
     tau = autocorr.integrated_time(chain)
     print("Acceptance fraction: {0:.3f}".format(acc_frac))
     print("Autocorrelation times: {0}, {1}"
           .format(*(map("{0:.0f}".format, tau))))
+    with open("numbers-mh.tex", "w") as f:
+        f.write("% Automatically generated\n")
+        f.write("\\newcommand{{\\accfrac}}{{{0:.2f}}}\n".format(acc_frac))
+        f.write("\\newcommand{{\\taua}}{{{0:.0f}}}\n".format(tau[0]))
+        f.write("\\newcommand{{\\taub}}{{{0:.0f}}}\n".format(tau[1]))
 
     # Plot the traces and corner plot.
-    s = list(SQUARE_FIGSIZE)
-    s[1] *= 0.8
-    fig, axes = plt.subplots(2, 1, figsize=s, sharex=True)
+    fig, axes = plt.subplots(2, 1, figsize=SQUARE_FIGSIZE, sharex=True)
     axes[0].plot(chain[:, 0], "k")
     axes[1].plot(chain[:, 1], "k")
     axes[0].set_ylabel(r"$\theta_1$")
@@ -73,6 +76,7 @@ if __name__ == "__main__":
     ax.plot(p[:, 1], label=r"$f(\theta) = \theta_2$")
     p = autocorr.function(np.prod(chain, axis=1))
     ax.plot(p, label=r"$f(\theta) = \theta_1 \, \theta_2$")
+    ax.set_title("Metropolis")
     ax.set_ylabel("autocorrelation")
     ax.set_xlabel("lag [steps]")
     ax.set_xlim(0, 5000)
