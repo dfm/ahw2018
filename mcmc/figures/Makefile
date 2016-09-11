@@ -1,4 +1,4 @@
-ALL_FILES=traces.pdf ensemble.pdf
+ALL_FILES=traces.pdf ensemble.pdf data.pdf
 
 default: $(ALL_FILES)
 

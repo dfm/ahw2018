@@ -216,6 +216,21 @@ The autocorrelation function.
 The autocorrelation function.
 \label{fig:ensemble}}
 
+\paragraph{A more realistic problem: fitting a line to data}
+
+In this section, you will fit a line to the small data set plotted in
+Figure~\ref{fig:data} and available online at.
+If you just have data points with Gaussian uncertainties and Gaussian or broad
+priors, you probably shouldn't use MCMC (because the posterior can be sampled
+analytically) so let's make it a little more interesting: there is an
+intrinsic scatter in the relationship and there are uncertainties on the $x$
+values.
+We'll start by ignoring the $x$ uncertantites.
+
+\ssfigure{figures/data.pdf}{0.5}{%
+The data.
+\label{fig:ensemble}}
+
 % \begin{multicols}{2}
 % {\centering\bf REFERENCES\par}
 % \vspace{0.2em}
