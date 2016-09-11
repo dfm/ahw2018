@@ -5,7 +5,8 @@
 
 # Travis needs to be provided with the environment variables:
 # - GITHUB_USER:    your GitHub username
-# - GITHUB_API_KEY: a personal access token (https://github.com/settings/tokens)
+# - GITHUB_API_KEY: a personal access token - make sure that it has access to
+#                   'repo' - https://github.com/settings/tokens
 
 sudo: false
 
