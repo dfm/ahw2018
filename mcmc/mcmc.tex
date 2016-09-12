@@ -172,9 +172,12 @@ required to compute the sampling uncertainty on the approximation
 and the sampler that produces a chain with a smallest value of
 $\tau_\mathrm{int}$ at fixed computational cost is the best.
 
-\question{Write or find a function that computes the autocorrelation function
-of a one-dimensional chain and compute this for a few choices of $f(\theta)$.}
-Figure~\ref{fig:autocorr} gives a few suggestions for functions to consider.
+\question{Write or find a function that computes the autocorrelation
+function\footnote{If you write your own function, don't directly sum the
+variance at each lag~--~this will be way too slow. Instead, you could try
+using an FFT.} of a one-dimensional chain and compute this for a few choices
+of $f(\theta)$.} Figure~\ref{fig:autocorr} gives a few suggestions for
+functions to consider.
 \question{Then, find or implement a function that estimates the integrated
 autocorrelation time}:
 \begin{eqnarray}
@@ -200,16 +203,40 @@ Can you find a better choice of $\sigma$? What if you use different values of
 $\sigma$ for each parameter? How many tuning parameters are there in this
 method?}
 
+\textbf{Bonus:} Try running a different sampling algorithm on the same problem
+and compare performance using an estimate of the autocorrelation time.
+For example, without any tuning,
+\textsf{emcee}\footnote{\url{http://dfm.io/emcee}} gets autocorrelation times
+of about \etaua~steps for both $f(\theta)=\theta_1$ and $f(\theta)=\theta_2$.
+Can you match that performance using Metropolis? What changes did you have to
+make?
+
 \ssfigure{figures/traces.pdf}{0.5}{%
-These are traces.
+The parameter traces for Metropolis MCMC sampling of a two-dimensional
+Gaussian.
+The plots show the parameter values as a function of step number in the chain.
+To show the autocorrelation on this plot, I zoomed in to only show the first
+few steps but the full chain used for the following figures had $4\times 10^5$
+steps.
 \label{fig:traces}}
 
 \ssfigure{figures/corner.pdf}{0.5}{%
-And a scatterplot matrix.
+A scatterplot matrix or corner plot of the chain from Figure~\ref{fig:traces}.
+The central panel shows the scatterplot of the parameter values from the chain
+and the histograms show the corresponding projections.
+The scatterplot shows the Monte Carlo estimate of the joint probability
+density $p(\theta_1,\,\theta_2\,|\,\mathrm{data})$ and the histograms are
+estimates of the marginalized probability densities
+$p(\theta_1\,|\,\mathrm{data})$ and $p(\theta_2\,|\,\mathrm{data})$.
 \label{fig:corner}}
 
 \ssfigure{figures/autocorr.pdf}{0.5}{%
-The autocorrelation function.
+The autocorrelation function for chains of $\{f_k(\theta^{(n)})\}_{n=1}^N$ for
+different choices of $f_k$.
+Compare this to Figure~\ref{fig:traces} to see how the autocorrelation relates
+to the chain behavior.
+Why do the autocorrelation functions have different scales?
+Is the sampler well tuned for $f(\theta) = \theta_1$?
 \label{fig:autocorr}}
 
 % \ssfigure{figures/ensemble.pdf}{0.5}{%
@@ -221,7 +248,8 @@ The autocorrelation function.
 
 In this section, you will fit a line to the small data set plotted in
 Figure~\ref{fig:data} and available online at
-\url{https://github.com/dfm/imprs/blob/master/mcmc/data.txt}.
+\url{https://github.com/dfm/imprs/blob/master/mcmc/data.txt}\footnote{In this
+file, the columns are $x$, $y$, $\sigma_y$, and $\sigma_x$.}.
 If you just have data points with Gaussian uncertainties and Gaussian or broad
 priors, you probably shouldn't use MCMC (because the posterior can be sampled
 analytically) so let's make it a little more interesting: there is an
@@ -241,12 +269,15 @@ and a reasonable choice of ``uninformative'' prior is\footnote{See
 J.~VanderPlas's blog for a discussion of this choice:
 \url{http://jakevdp.github.io/blog/2014/06/14/frequentism-and-bayesianism-4-bayesian-in-python/}.}:
 \begin{eqnarray}
-\ln p(m,\,b,\,\ln s) &\propto& -\frac{3}{2}\ln(1+b^2) \quad.
+\ln p(m,\,b,\,\ln s) &\propto& -\frac{3}{2}\ln(1+b^2) + B(m,\,b,\,\ln s)
 \end{eqnarray}
+where $B(m,\,b,\,\ln s)$ is a finite constant when $m$, $b$, and $\ln s$ take
+values in a ``reasonable range'' (How should you choose this in general?) and
+$-\infty$ otherwise.
 
 Implement this model in code and try sampling from it using the sampler that
 you implemented previously or another package.
-Make all the diagnostic plots from above but include one other plot: the
+Make all the diagnostic plots from above but include one new plot: the
 posterior predictive distribution (see Figure~\ref{fig:line1}).
 To achieve this, plot the line predicted for a few samples randomly selected
 from the chain on top of the observed data.
@@ -262,11 +293,18 @@ any other students who are working on this part.
 \newpage
 
 \ssfigure{figures/data.pdf}{0.5}{%
-The data.
+The black points with error bars show the simulated data used for this
+experiment.
+The blue line is the true underlying model that generated the data and the
+orange line is what you get if you run linear least squares and ignore the
+intrinsic scatter in the relation.
 \label{fig:data}}
 
 \ssfigure{figures/line1.pdf}{0.5}{%
-The data.
+Like Figure~\ref{fig:data} but the gray lines show the prediction for 24
+random samples from the chain.
+The uncertainty is larger than for the least squares result but the true model
+is within the credible region.
 \label{fig:line1}}
 
 % \begin{multicols}{2}

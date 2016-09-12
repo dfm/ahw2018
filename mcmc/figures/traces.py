@@ -55,8 +55,8 @@ if __name__ == "__main__":
 
     # Plot the traces and corner plot.
     fig, axes = plt.subplots(2, 1, figsize=SQUARE_FIGSIZE, sharex=True)
-    axes[0].plot(chain[:, 0], "k")
-    axes[1].plot(chain[:, 1], "k")
+    axes[0].plot(chain[:5000, 0], "k")
+    axes[1].plot(chain[:5000, 1], "k")
     axes[0].set_ylabel(r"$\theta_1$")
     axes[1].set_ylabel(r"$\theta_2$")
     axes[1].set_xlabel("step")
