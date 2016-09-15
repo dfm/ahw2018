@@ -6,4 +6,5 @@ Exercises for the 2016 IMPRS summer school in Heidelberg, Germany
 Click below to access the exercises:
 
 [Day 1 - Markov Chain Monte Carlo](https://github.com/dfm/imprs/raw/master-pdf/mcmc/mcmc.pdf)
+
 [Day 5 - Gaussian Process](https://github.com/dfm/imprs/blob/master/gp/README.md)
