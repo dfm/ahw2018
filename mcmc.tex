@@ -3,8 +3,8 @@
 \input{dfm_stylez}
 \pagestyle{myheadings}
 \markright{\textsf{\footnotesize %
-                   IMPRS summer school /
-                   2016 /
+                   Astro Hack Week /
+                   2018 /
                    MCMC exercises by Dan Foreman-Mackey}}
 
 % Single-spacing.
@@ -190,9 +190,8 @@ Furthermore, the choice of $W$ can be subtle. Try several values of $W$ or
 read A.~Sokal's notes\footnote{See pages 15--16 of this note:
 \url{http://www.stat.unc.edu/faculty/cji/Sokal.pdf}} on how to choose $W$ more
 robustly.
-If you are working in Python, \textsf{emcee}\footnote{Versions 2.2.x and
-greater: \url{http://dan.iel.fm/emcee/current/api/\#autocorrelation-analysis}.}
-includes an implementation of this method.
+For more information about autocorrelation analysis, including Python code,
+take a look at this blog post: \url{https://dfm.io/posts/autocorr/}.
 
 For $\sigma = 0.1$, I find integrated autocorrelation times of \taua~steps and
 \taub~steps for $f(\theta)=\theta_1$ and $f(\theta)=\theta_2$ respectively.
@@ -206,8 +205,9 @@ method?}
 \textbf{Bonus:} Try running a different sampling algorithm on the same problem
 and compare performance using an estimate of the autocorrelation time.
 For example, without any tuning,
-\textsf{emcee}\footnote{\url{http://dfm.io/emcee}} gets autocorrelation times
-of about \etaua~steps for both $f(\theta)=\theta_1$ and $f(\theta)=\theta_2$.
+\textsf{emcee}\footnote{\url{http://emcee.readthedocs.io}} gets
+autocorrelation times of about \etaua~steps for both $f(\theta)=\theta_1$ and
+$f(\theta)=\theta_2$.
 Can you match that performance using Metropolis? What changes did you have to
 make?
 
@@ -248,7 +248,7 @@ Is the sampler well tuned for $f(\theta) = \theta_1$?
 
 In this section, you will fit a line to the small data set plotted in
 Figure~\ref{fig:data} and available online at
-\url{https://github.com/dfm/imprs/blob/master/mcmc/data.txt}\footnote{In this
+\url{https://github.com/dfm/ahw2018/blob/master/data.txt}\footnote{In this
 file, the columns are $x$, $y$, $\sigma_y$, and $\sigma_x$.}.
 If you just have data points with Gaussian uncertainties and Gaussian or broad
 priors, you probably shouldn't use MCMC (because the posterior can be sampled
